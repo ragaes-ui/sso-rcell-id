@@ -47,4 +47,4 @@ class MongoAdapter {
   }
 }
 
-module.exports = MongoAdapter;
+export default MongoAdapter;
