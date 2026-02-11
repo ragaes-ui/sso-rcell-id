@@ -1,7 +1,7 @@
-const MongoAdapter = require('../adapters/mongodb-adapter'); 
-const Account = require('../support/account');
+import MongoAdapter from '../adapters/mongodb-adapter.js'; 
+import Account from '../support/account.js';
 
-module.exports = {
+export default {
   adapter: MongoAdapter,
   findAccount: Account.findAccount,
 
@@ -12,12 +12,13 @@ module.exports = {
     email: ['email'],
   },
 
+  // Daftarkan aplikasi rcellfest kamu di sini
   clients: [{
-    client_id: 'app-klien-satu',
-    client_secret: 'rahasia',
-    grant_types: ['authorization_code'], 
-    redirect_uris: ['http://localhost:8080/cb'],
-    scope: 'openid profile email' 
+    client_id: 'app-rcellfest',
+    client_secret: 'rahasia-fest-123',
+    grant_types: ['authorization_code'],
+    redirect_uris: ['https://rcellfest.vercel.app/api/auth/callback/oidc'], 
+    scope: 'openid profile email'
   }],
 
   features: {
@@ -25,9 +26,8 @@ module.exports = {
   },
   
   pkce: { required: () => false },
-  cookies: { keys: ['kunci-rahasia-rcell-123'] },
+  cookies: { keys: ['kunci-rahasia-sso-rcell-id'] },
   
-  // BAGIAN INI YANG TADI ERROR: Sudah diperbaiki filenya
   jwks: {
     keys: [
       {
