@@ -2,17 +2,18 @@
   "name": "my-sso-rcell-id",
   "version": "1.0.0",
   "description": "SSO Server RCell",
+  "type": "module",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "seed": "node seed.js"
   },
   "dependencies": {
-    "bcryptjs": "*",
-    "dotenv": "*",
-    "ejs": "*",
-    "express": "*",
-    "mongoose": "*",
-    "oidc-provider": "*"
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "oidc-provider": "^12.0.0"
   }
 }
