@@ -1,5 +1,4 @@
-// src/adapters/mongodb-adapter.js
-const OidcPayload = require('../models/OidcPayload');
+import OidcPayload from '../models/OidcPayload.js'; // Pastikan pakai .js
 
 class MongoAdapter {
   constructor(name) {
@@ -21,7 +20,6 @@ class MongoAdapter {
     return { ...found.data, expiresAt: found.expiresAt };
   }
 
-  // 👇 INI FUNGSI YANG TADI HILANG DAN BIKIN ERROR
   async findByUid(uid) {
     const found = await OidcPayload.findOne({ uid, kind: this.name });
     if (!found) return undefined;
@@ -47,4 +45,5 @@ class MongoAdapter {
   }
 }
 
+// Ganti module.exports menjadi export default
 export default MongoAdapter;
