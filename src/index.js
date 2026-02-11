@@ -1,10 +1,18 @@
-const express = require('express');
-const { Provider } = require('oidc-provider');
-const mongoose = require('mongoose');
-const path = require('path');
-const dotenv = require('dotenv');
+import express from 'express';
+import { Provider } from 'oidc-provider';
+import mongoose from 'mongoose';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
-// Memuat variabel lingkungan
+// Import file lokal wajib pakai ekstensi .js di ESM
+import configuration from './config/configuration.js';
+import interactionRoutes from './routes/interaction.js';
+
+// Setup __dirname untuk ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
 
 const app = express();
@@ -26,11 +34,12 @@ async function connectToDatabase() {
         return cachedDb;
     }
     console.log('🔄 Menghubungkan ke MongoDB Atlas...');
+    // Gunakan MONGO_URI dari Environment Variables Vercel
     cachedDb = await mongoose.connect(process.env.MONGO_URI);
     return cachedDb;
 }
 
-// Middleware untuk memastikan koneksi DB sebelum request diproses
+// Middleware koneksi DB
 app.use(async (req, res, next) => {
     try {
         await connectToDatabase();
@@ -42,13 +51,13 @@ app.use(async (req, res, next) => {
 });
 
 // --- OIDC PROVIDER SETUP ---
-const configuration = require('./config/configuration');
-// URL Issuer otomatis menyesuaikan domain Vercel (HTTPS)
-const ISSUER = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `http://localhost:${process.env.PORT || 3000}`;
+// Issuer otomatis menggunakan domain Vercel jika tersedia
+const ISSUER = process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}` 
+    : `http://localhost:${process.env.PORT || 3000}`;
 
 const oidc = new Provider(ISSUER, {
     ...configuration,
-    // Pastikan cookies aman di lingkungan HTTPS Vercel
     cookies: {
         ...configuration.cookies,
         short: { secure: true },
@@ -56,17 +65,16 @@ const oidc = new Provider(ISSUER, {
     }
 });
 
-// Route untuk Login Interaction
-const interactionRoutes = require('./routes/interaction')(oidc);
-app.use('/interaction', interactionRoutes);
+// Route untuk Login Interaction (Pastikan interaction.js juga sudah pakai export default)
+app.use('/interaction', interactionRoutes(oidc));
 
 // Pasang OIDC Provider di path /oidc
 app.use('/oidc', oidc.callback());
 
-// Halaman utama (Opsional)
+// Halaman utama
 app.get('/', (req, res) => {
-    res.send('🚀 RCell SSO Server is Online!');
+    res.send('🚀 RCell SSO Server is Online (ESM Mode)!');
 });
 
-// EKSPOR UNTUK VERCEL (Jangan gunakan app.listen)
-module.exports = app;
+// EKSPOR UNTUK VERCEL
+export default app;
