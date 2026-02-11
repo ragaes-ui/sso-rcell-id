@@ -1,4 +1,3 @@
-// src/support/account.js
 class Account {
   constructor(id) {
     this.accountId = id;
@@ -18,4 +17,4 @@ class Account {
   }
 }
 
-module.exports = Account;
+export default Account;
