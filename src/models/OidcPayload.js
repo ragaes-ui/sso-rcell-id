@@ -1,5 +1,4 @@
-// src/models/OidcPayload.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const OidcPayloadSchema = new Schema({
@@ -9,7 +8,10 @@ const OidcPayloadSchema = new Schema({
   expiresAt: { type: Date, required: true }
 });
 
+// Penambahan index untuk performa dan auto-delete data expired
 OidcPayloadSchema.index({ uid: 1 });
 OidcPayloadSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-module.exports = mongoose.model('OidcPayload', OidcPayloadSchema);
+const OidcPayload = mongoose.model('OidcPayload', OidcPayloadSchema);
+
+export default OidcPayload;
