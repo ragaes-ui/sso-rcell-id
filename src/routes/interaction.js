@@ -1,7 +1,7 @@
 const express = require('express');
 const User = require('../models/User'); // Import model User tadi
 
-module.exports = (oidc) => {
+export default (oidc) => { ... }
   const router = express.Router();
 
   // 1. GET: Tampilkan Halaman Login
