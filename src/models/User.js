@@ -1,17 +1,35 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs'); // npm install bcryptjs
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
-const UserSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, // Password ter-enkripsi
-  name: { type: String, required: true },
-  role: { type: String, default: 'user' },
-  createdAt: { type: Date, default: Date.now }
-});
+const userSchema = new mongoose.Schema({
+  email: { 
+    type: String, 
+    required: true, 
+    unique: true, 
+    lowercase: true 
+  },
+  password: { 
+    type: String, 
+    required: true 
+  },
+  name: { 
+    type: String 
+  },
+  role: { 
+    type: String, 
+    default: 'user' 
+  }
+}, { timestamps: true });
 
-// Method helper untuk cek password
-UserSchema.methods.isValidPassword = async function(password) {
-  return await bcrypt.compare(password, this.password);
+// Method untuk mengecek password saat login
+userSchema.methods.isValidPassword = async function(password) {
+  try {
+    return await bcrypt.compare(password, this.password);
+  } catch (error) {
+    throw error;
+  }
 };
 
-module.exports = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', userSchema);
+
+export default User;
